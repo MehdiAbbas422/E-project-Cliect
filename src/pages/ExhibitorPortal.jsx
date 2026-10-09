@@ -124,7 +124,7 @@ const ExhibitorPortal = () => {
 
           <ImageUpload
             label="Company logo"
-            hint="JPG or PNG, up to 5 MB"
+            hint="JPG or PNG, up to 4 MB"
             value={form.logo}
             onChange={(url) => setForm({ ...form, logo: url })}
           />

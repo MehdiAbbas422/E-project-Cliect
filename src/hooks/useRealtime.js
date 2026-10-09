@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 
-// Purpose: Subscribes a page component to live "data changed" events pushed by
-// the server (via Socket.IO) so lists refresh without a manual reload.
-// The `handler` receives the event detail, e.g. { scope, expoId }.
+// Purpose: Subscribes a page component to live "data changed" events from the
+// server (Socket.IO push, or polling on serverless hosts) so lists refresh
+// without a manual reload. The `handler` receives detail, e.g. { scope, expoId }.
 export const useRealtime = (handler) => {
   useEffect(() => {
     const listener = (event) => handler(event.detail)

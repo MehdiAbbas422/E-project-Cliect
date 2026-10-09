@@ -4,9 +4,10 @@ import api from '../api'
 /**
  * ImageUpload — replaces the old "image URL" text input.
  * Picks a JPG/PNG file, uploads it to POST /api/upload and gives back the
- * public URL (e.g. /uploads/image-169...png) through onChange.
+ * public URL (e.g. /api/images/<id>) through onChange. Images are stored in
+ * MongoDB, so they survive serverless redeploys.
  */
-const ImageUpload = ({ value, onChange, label = 'Image', hint = 'JPG or PNG, up to 5 MB' }) => {
+const ImageUpload = ({ value, onChange, label = 'Image', hint = 'JPG or PNG, up to 4 MB' }) => {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
 
@@ -20,8 +21,8 @@ const ImageUpload = ({ value, onChange, label = 'Image', hint = 'JPG or PNG, up 
       e.target.value = ''
       return
     }
-    if (file.size > 5 * 1024 * 1024) {
-      setError('Image must be smaller than 5 MB.')
+    if (file.size > 4 * 1024 * 1024) {
+      setError('Image must be smaller than 4 MB.')
       e.target.value = ''
       return
     }
