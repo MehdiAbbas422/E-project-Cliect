@@ -1,0 +1,7 @@
+/* ============================================================
+   Exhibitors page — attendee-facing exhibitor directory.
+   The directory reuses shared building blocks (`.grid`, `.card`,
+   `.thumb-row`, `.media.round`, `.pager`) from components.css, so
+   no page-specific rules are needed yet. Add any Exhibitors-only
+   styling here.
+   ============================================================ */

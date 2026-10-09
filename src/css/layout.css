@@ -1,0 +1,208 @@
+/* ============================================================
+   Layout — glassy top navigation (with a responsive drawer),
+   page headers, section titles and the site footer.
+   ============================================================ */
+
+/* ---------------- Navigation ---------------- */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 70px;
+  padding: 10px clamp(16px, 3vw, 32px);
+  background: rgba(13, 17, 34, 0.92);
+  border-bottom: 1px solid var(--border);
+}
+nav .brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--text);
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: 19px;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+nav .brand:hover { color: var(--text); }
+nav .brand .logo-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: var(--primary-grad);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 800;
+  box-shadow: 0 10px 22px -8px rgba(124, 108, 255, 0.9);
+}
+nav .links { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+nav .links a {
+  color: var(--text-2);
+  font-size: 14.5px;
+  font-weight: 600;
+  padding: 9px 13px;
+  border-radius: var(--radius-sm);
+  transition: background .16s ease, color .16s ease;
+}
+nav .links a:hover { background: rgba(255, 255, 255, 0.06); color: var(--text); }
+nav .links a.nav-cta {
+  background: var(--btn-grad);
+  color: #fff;
+  padding: 10px 18px;
+  box-shadow: 0 12px 26px -14px rgba(124, 108, 255, 0.95);
+}
+nav .links a.nav-cta:hover { filter: brightness(1.07); color: #fff; }
+nav .links button { padding: 9px 15px; font-size: 14px; }
+nav .user-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-2);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 7px 13px;
+  border-radius: 999px;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+nav .user-chip:hover { border-color: var(--border-strong); color: var(--text); }
+nav .user-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px var(--success-soft); flex: none; }
+
+/* mobile menu button */
+.nav-toggle {
+  display: none;
+  position: relative;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  box-shadow: none;
+  flex: none;
+}
+.nav-toggle:hover { transform: none; filter: none; background: var(--surface-3); }
+.nav-toggle span { position: absolute; left: 50%; width: 20px; height: 2px; border-radius: 2px; background: var(--text); transform: translateX(-50%); transition: top .25s ease, transform .25s ease, opacity .2s ease; }
+.nav-toggle span:nth-child(1) { top: 15px; }
+.nav-toggle span:nth-child(2) { top: 21px; }
+.nav-toggle span:nth-child(3) { top: 27px; }
+.nav-toggle.open span:nth-child(1) { top: 21px; transform: translateX(-50%) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { top: 21px; transform: translateX(-50%) rotate(-45deg); }
+
+/* ---------------- Page header ---------------- */
+.page-head { margin-bottom: 26px; }
+.page-head .eyebrow, .eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--primary-text);
+  background: var(--primary-soft);
+  border: 1px solid var(--primary-line);
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+.page-head p { color: var(--muted); max-width: 680px; font-size: 16px; }
+
+/* Banner variant: a page-appropriate cover image sits behind the title with a
+   dark scrim (supplied per page via the --head-img custom property). */
+.page-head.banner {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 168px;
+  padding: clamp(28px, 4.4vw, 46px) clamp(22px, 4vw, 44px);
+  border-radius: 24px;
+  border: 1px solid var(--border-strong);
+  background-image: var(--head-img);
+  background-size: cover;
+  background-position: center;
+  background-color: var(--surface-2);
+  box-shadow: var(--shadow-md);
+}
+.page-head.banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(9, 12, 28, 0.95) 0%,
+    rgba(11, 15, 36, 0.82) 44%,
+    rgba(24, 17, 58, 0.5) 100%
+  );
+}
+.page-head.banner > * { position: relative; z-index: 1; }
+.page-head.banner h1 { color: #fff; margin: 4px 0 8px; font-size: clamp(26px, 3.8vw, 40px); }
+.page-head.banner p { color: #cfd5f5; max-width: 620px; }
+.page-head.banner .eyebrow {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #eceaff;
+}
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 40px 0 18px; flex-wrap: wrap; }
+.section-head h2 { margin: 0; }
+
+/* ---------------- Footer ---------------- */
+footer {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  margin-top: 56px;
+  padding: 30px 24px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+footer b { color: var(--text-2); }
+
+/* ---------------- Responsive (drawer + chrome) ---------------- */
+/* Full desktop nav needs ~1180px for an admin's full link set; below that we
+   switch to the slide-in drawer so the bar never wraps or overflows. */
+@media (max-width: 1180px) {
+  .nav-toggle { display: inline-flex; }
+  nav .links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 14px clamp(16px, 4vw, 24px) 20px;
+    background: var(--glass);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+    max-height: calc(100vh - 70px);
+    overflow-y: auto;
+  }
+  nav .links.open { display: flex; }
+  nav .links a { padding: 13px 14px; border-radius: var(--radius-sm); font-size: 15px; }
+  nav .links .bell-wrap { margin: 4px 2px; }
+  nav .user-chip { width: 100%; justify-content: center; padding: 11px 14px; max-width: none; }
+  nav .links button { width: 100%; }
+}
+
+@media (max-width: 640px) {
+  nav { min-height: 64px; }
+  nav .brand { font-size: 17px; }
+  .container { padding: 22px 16px 56px; }
+  .section-head { margin: 30px 0 14px; }
+}

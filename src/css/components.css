@@ -1,0 +1,251 @@
+/* ============================================================
+   Components — reusable UI blocks used across multiple pages:
+   media, search, maps (with dark tiles), uploads, list items,
+   empty state, notifications, reply boxes, pagination & fav button.
+   ============================================================ */
+
+/* ---------------- Media / images ---------------- */
+.media {
+  width: 100%;
+  height: 168px;
+  object-fit: cover;
+  border-radius: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  display: block;
+}
+.media.round { border-radius: 50%; width: 72px; height: 72px; }
+.media-fallback {
+  width: 100%;
+  height: 168px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 40px;
+  background: linear-gradient(135deg, rgba(124, 108, 255, 0.25) 0%, rgba(34, 211, 238, 0.2) 100%);
+  border: 1px solid var(--border);
+  color: var(--primary-text);
+}
+.thumb-row { display: flex; align-items: center; gap: 14px; }
+
+/* ---------------- Search ---------------- */
+.search { position: relative; max-width: 560px; width: 100%; }
+.search input { padding-left: 44px; border-radius: 14px; }
+.search .em { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 16px; opacity: .7; }
+
+/* ---------------- Map ---------------- */
+.map-box {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--surface-2);
+  box-shadow: var(--shadow-sm);
+}
+.map-box .leaflet-container { width: 100%; height: 100%; min-height: 260px; }
+.map-picker { border: 1px solid var(--border-strong); border-radius: 16px; overflow: hidden; background: var(--surface); }
+.map-picker .bar { display: flex; gap: 8px; padding: 10px; border-bottom: 1px solid var(--border); background: var(--surface-2); flex-wrap: wrap; }
+.map-picker .bar input { flex: 1; min-width: 180px; }
+.map-picker .bar button { flex: none; }
+.map-picker .leaflet-container { height: 300px; width: 100%; }
+.map-picker .status { padding: 9px 12px; font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--border); background: var(--surface-2); }
+.map-picker .status b { color: var(--text-2); }
+.map-embed { height: 340px; }
+.map-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 14px; }
+
+/* dark tiles to match the theme */
+.map-box .leaflet-tile, .map-picker .leaflet-tile { filter: invert(1) hue-rotate(180deg) brightness(0.94) contrast(0.9); }
+.leaflet-container { background: var(--surface-2); font-family: 'Inter', sans-serif; }
+.leaflet-control-attribution { background: rgba(6, 9, 20, 0.6) !important; color: var(--muted) !important; }
+.leaflet-control-attribution a { color: var(--text-2) !important; }
+.leaflet-bar a { background: var(--surface-2) !important; color: var(--text) !important; border-bottom-color: var(--border) !important; }
+.leaflet-bar a:hover { background: var(--surface-3) !important; }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--surface-2); color: var(--text); box-shadow: var(--shadow-md); }
+.leaflet-popup-content { color: var(--text); }
+
+/* ---------------- Upload ---------------- */
+.upload {
+  border: 1.5px dashed var(--border-strong);
+  border-radius: 16px;
+  background: rgba(8, 11, 24, 0.4);
+  padding: 18px;
+  text-align: center;
+  transition: border-color .18s ease, background .18s ease;
+}
+.upload:hover { border-color: var(--primary); background: var(--primary-soft); }
+.upload input[type="file"] { display: none; }
+.upload .label { font-size: 14px; color: var(--muted); }
+.upload .label b { color: var(--primary-text); cursor: pointer; }
+.upload .preview { display: flex; align-items: center; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.upload .preview img {
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-sm);
+}
+.upload .preview .file-name { font-size: 13px; color: var(--text-2); text-align: left; word-break: break-all; }
+.upload .preview .file-name small { display: block; color: #7ff0c4; font-weight: 700; }
+.upload .row { justify-content: center; margin-top: 10px; }
+
+/* ---------------- List items (dashboards / inboxes) ---------------- */
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface-2);
+  margin-bottom: 10px;
+  transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease, background .16s ease;
+}
+.list-item:hover { border-color: var(--border-strong); background: var(--surface-3); box-shadow: var(--shadow-sm); }
+.list-item .who { font-weight: 600; font-size: 14.5px; }
+.list-item .sub { font-size: 13px; color: var(--muted); }
+.list-item.column { flex-direction: column; align-items: stretch; }
+.list-item.column .row { align-items: center; }
+
+/* ---------------- Empty state ---------------- */
+.empty {
+  text-align: center;
+  padding: 40px 20px;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: 16px;
+  background: rgba(8, 11, 24, 0.35);
+  color: var(--muted);
+  font-size: 14.5px;
+}
+.empty .em { font-size: 30px; display: block; margin-bottom: 8px; }
+.empty h2 { font-size: 20px; }
+
+/* ---------------- Real-time notifications ---------------- */
+.bell-wrap { position: relative; }
+.bell {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  font-size: 17px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  box-shadow: none;
+  padding: 0;
+}
+.bell:hover { border-color: var(--primary); background: var(--surface-3); transform: none; filter: none; }
+.bell-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: 10px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 0 2px var(--surface);
+}
+.notif-panel {
+  position: absolute;
+  right: 0;
+  top: 52px;
+  width: 370px;
+  max-width: 88vw;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  z-index: 1200;
+}
+.notif-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+  font-size: 14px;
+}
+.notif-head .row { gap: 12px; }
+.notif-list { max-height: 380px; overflow-y: auto; }
+.notif-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  text-align: left;
+  padding: 13px 16px;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background: var(--surface);
+  box-shadow: none;
+  cursor: pointer;
+}
+.notif-item:hover { background: var(--surface-2); transform: none; box-shadow: none; filter: none; }
+.notif-item.unread { background: var(--primary-soft); }
+.notif-item.unread:hover { background: rgba(124, 108, 255, 0.24); }
+.notif-title { font-weight: 700; font-size: 14px; color: var(--text); }
+.notif-msg { font-size: 13px; color: var(--text-2); }
+.notif-time { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+
+/* ---------------- Communication blocks (replies / inboxes) ---------------- */
+.reply-box {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border-left: 3px solid var(--primary);
+  background: var(--primary-soft);
+}
+.reply-box p { margin: 4px 0 0; font-size: 14px; color: var(--text-2); }
+.reply-label { font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; color: var(--primary-text); }
+
+/* ---------------- Pagination ---------------- */
+.pager { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 28px 0 8px; flex-wrap: wrap; }
+.pager .muted { font-size: 13.5px; font-weight: 600; }
+
+/* ---------------- Favourite (heart) button ---------------- */
+.fav-btn {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  font-size: 17px;
+  line-height: 1;
+  background: rgba(12, 16, 32, 0.85);
+  border: 1px solid var(--border-strong);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+  z-index: 2;
+}
+.fav-btn:hover { transform: scale(1.1); background: rgba(12, 16, 32, 0.92); filter: none; }
+.fav-btn.on { border-color: rgba(251, 113, 133, 0.6); background: rgba(251, 113, 133, 0.2); }
+.fav-btn.detail { top: 16px; right: 16px; left: auto; }
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 1180px) {
+  .notif-panel { position: fixed; left: 12px; right: 12px; top: 74px; width: auto; }
+}
+@media (max-width: 640px) {
+  .media { height: 150px; }
+  .media.round { width: 60px; height: 60px; }
+  .map-embed { height: 280px; }
+  .map-picker .leaflet-container { height: 260px; }
+  .list-item { align-items: flex-start; flex-direction: column; }
+  .list-item > .row { width: 100%; }
+}

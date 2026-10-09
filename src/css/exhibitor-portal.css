@@ -1,0 +1,7 @@
+/* ============================================================
+   Exhibitor portal — exhibitor dashboard (booths, sessions,
+   enquiries, bookings).
+   Reuses shared blocks (`.grid`, `.card`, `.list-item`,
+   `.reply-box`, `.badge`) from components.css / base.css. Add any
+   portal-only styling here.
+   ============================================================ */

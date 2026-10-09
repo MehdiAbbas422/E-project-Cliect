@@ -1,0 +1,38 @@
+/* ============================================================
+   Expos page — expo listing cards.
+   ============================================================ */
+
+.expo-card { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+.expo-card .cover { position: relative; height: 178px; overflow: hidden; }
+.expo-card .cover img { width: 100%; height: 100%; object-fit: cover; transition: transform .45s ease; }
+.expo-card:hover .cover img { transform: scale(1.06); }
+.expo-card .cover .fallback {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  font-size: 46px;
+  background: linear-gradient(135deg, #6d5cf0 0%, #7c3aed 55%, #0ea5b7 100%);
+  color: rgba(255,255,255,.92);
+}
+.expo-card .cover .date-chip {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(12, 16, 32, 0.94);
+  border: 1px solid var(--border-strong);
+  border-radius: 13px;
+  padding: 7px 11px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  line-height: 1.15;
+}
+.expo-card .cover .date-chip b { display: block; font-size: 17px; color: var(--primary-text); font-family: 'Sora', sans-serif; }
+.expo-card .cover .date-chip span { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: .08em; }
+.expo-card .body { padding: 20px 22px 22px; display: flex; flex-direction: column; flex: 1; }
+.expo-card .body p.desc { color: var(--muted); font-size: 14.5px; flex: 1; }
+.expo-card .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+
+.meta { display: flex; flex-direction: column; gap: 7px; margin-top: 14px; font-size: 13.5px; color: var(--text-2); }
+.meta .item { display: flex; align-items: center; gap: 8px; }
+.meta .item .em { width: 18px; text-align: center; }
