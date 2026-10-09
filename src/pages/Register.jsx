@@ -8,7 +8,7 @@ import { pageImages } from '../images'
 const Register = () => {
   const { register, verifyOtp } = useAuth()
   const navigate = useNavigate()
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'attendee', adminCode: '' })
+  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'attendee'})
   const [step, setStep] = useState('form')
   const [code, setCode] = useState('')
   const [error, setError] = useState('')
@@ -92,16 +92,6 @@ const Register = () => {
             <option value="exhibitor">Exhibitor — showcase your company</option>
             <option value="admin">Admin / Organizer — run events</option>
           </select>
-          {form.role === 'admin' && (
-            <>
-              <label>Admin code <span className="hint">— provided by the team</span></label>
-              <input placeholder="Admin signup code" value={form.adminCode}
-                onChange={(e) => setForm({ ...form, adminCode: e.target.value })} />
-              <p className="hint" style={{ marginTop: -6, marginBottom: 12 }}>
-                Admin sign-up is restricted. The first admin can register without a code.
-              </p>
-            </>
-          )}
           <button className="mt full">Create account</button>
         </form>
         <p className="auth-aside">Already have an account? <Link to="/login">Login</Link></p>

@@ -18,7 +18,7 @@ const POLL_MS = 5000
 // configured; otherwise (e.g. the Vercel production build) we poll.
 const USE_SOCKET = Boolean(import.meta.env.VITE_SOCKET_URL) || import.meta.env.DEV
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL
-  || (import.meta.env.DEV ? 'https://e-project-server-pb0fx3t9o-zeny3.vercel.app' : window.location.origin)
+  || (import.meta.env.DEV ? 'http://localhost:5000' : window.location.origin)
 
 let socket = null // real Socket.IO connection (when available)
 let poller = null // polling fallback emitter

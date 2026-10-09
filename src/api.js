@@ -1,10 +1,9 @@
 import axios from 'axios'
 
-// Base URL of the API. In development the Vite proxy forwards /api to the
-// local server, so a relative path is enough. In production (for example a
-// Vercel frontend talking to a Vercel/Render backend) set VITE_API_URL to
-// the server origin, e.g. https://your-backend.vercel.app/api
-const baseURL = import.meta.env.VITE_API_URL || '/api'
+// Keep local requests on the Vite proxy, but send production requests directly
+// to the separately deployed API unless VITE_API_URL overrides the default.
+const baseURL = import.meta.env.VITE_API_URL
+  || (import.meta.env.PROD ? 'https://e-project-server.vercel.app/api' : '/api')
 
 const api = axios.create({ baseURL })
 
