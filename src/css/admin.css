@@ -9,11 +9,11 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  margin: 0 0 26px;
+  margin: 0 0 28px;
   padding: 8px;
   border: 1px solid var(--border);
   border-radius: 16px;
-  background: rgba(8, 11, 24, 0.4);
+  background: rgba(6, 11, 20, 0.5);
 }
 .admin-tabs a {
   display: inline-flex;
@@ -25,33 +25,40 @@
   font-weight: 600;
   color: var(--muted);
   border: 1px solid transparent;
-  transition: all .16s ease;
+  transition: background .16s ease, color .16s ease, border-color .16s ease;
 }
 .admin-tabs a:hover { background: var(--surface-2); color: var(--text); text-decoration: none; }
 .admin-tabs a.active {
   background: var(--primary-soft);
-  color: #fff;
+  color: #eafff7;
   border-color: var(--primary-line);
   box-shadow: var(--glow);
 }
 
-/* ---------------- Data table (admin) ---------------- */
+/* ---------------- Data tables ---------------- */
 .table-wrap {
-  overflow-x: auto;
-  max-width: 100%;
-  margin-top: 14px;
   border: 1px solid var(--border);
   border-radius: 16px;
   background: var(--surface-2);
+  overflow-x: auto;
 }
-.data-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 640px; }
-.data-table th, .data-table td { text-align: left; padding: 13px 15px; border-bottom: 1px solid var(--border); vertical-align: middle; overflow-wrap: anywhere; }
-.data-table th { background: var(--surface-3); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); white-space: nowrap; }
-.data-table tr:last-child td { border-bottom: none; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
+.data-table th, .data-table td { padding: 13px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+.data-table th {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--muted);
+  background: rgba(6, 11, 20, 0.4);
+}
+.data-table tbody tr { transition: background .14s ease; }
 .data-table tbody tr:hover { background: rgba(255, 255, 255, 0.03); }
-.data-table select { margin: 0; padding: 7px 10px; width: auto; }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table select { width: auto; padding: 7px 12px; font-size: 13px; }
 .data-table button { padding: 7px 12px; font-size: 13px; }
 
+/* ---------------- Responsive ---------------- */
 @media (max-width: 640px) {
   .admin-tabs { gap: 6px; padding: 6px; }
   .admin-tabs a { flex: 1 1 auto; justify-content: center; padding: 9px 10px; font-size: 13px; }

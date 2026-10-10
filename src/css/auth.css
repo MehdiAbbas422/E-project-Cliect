@@ -4,12 +4,11 @@
    ============================================================ */
 
 .auth-wrap {
+  width: 100%;
   max-width: 480px;
   margin: clamp(24px, 6vw, 64px) auto;
-  padding: clamp(24px, 4vw, 38px);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 40%),
-    var(--surface);
+  padding: clamp(26px, 4vw, 40px);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
@@ -20,13 +19,13 @@
   content: '';
   position: absolute;
   inset: 0 0 auto 0;
-  height: 5px;
-  background: var(--primary-grad);
+  height: 4px;
+  background: var(--btn-grad);
 }
 /* Decorative cover image at the top of an auth/profile/feedback card. */
 .auth-banner {
-  height: 118px;
-  margin: calc(-1 * clamp(24px, 4vw, 38px)) calc(-1 * clamp(24px, 4vw, 38px)) 22px;
+  height: 122px;
+  margin: calc(-1 * clamp(26px, 4vw, 40px)) calc(-1 * clamp(26px, 4vw, 40px)) 22px;
   background-size: cover;
   background-position: center;
   background-color: var(--surface-2);
@@ -38,8 +37,9 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(180deg, rgba(10, 13, 30, 0.05) 0%, rgba(10, 13, 30, 0.62) 100%);
+  background: linear-gradient(180deg, rgba(6, 11, 20, 0.15) 0%, rgba(6, 11, 20, 0.75) 100%);
 }
-.auth-wrap h2 { text-align: center; }
-.auth-wrap .sub { text-align: center; color: var(--muted); font-size: 14.5px; margin-bottom: 6px; }
-.auth-aside { text-align: center; margin-top: 18px; font-size: 14.5px; color: var(--muted); }
+.auth-wrap h1, .auth-wrap h2 { text-align: center; }
+.auth-wrap .sub { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+.auth-aside { text-align: center; margin-top: 18px; font-size: 14px; color: var(--muted); }
+.auth-aside a { font-weight: 600; }

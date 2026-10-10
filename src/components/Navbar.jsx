@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useNotifications } from '../context/NotificationContext'
+import logo from '../assets/logo.png'
 
 const Navbar = () => {
   const { user, logout } = useAuth()
@@ -49,7 +50,7 @@ const Navbar = () => {
   return (
     <nav>
       <Link to="/" className="brand" onClick={() => setMenu(false)}>
-        <span className="logo-mark">E</span>
+        <img className="brand-logo" src={logo} alt="" aria-hidden="true" />
         EventSphere
       </Link>
 

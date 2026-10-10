@@ -1,0 +1,128 @@
+/* ============================================================
+   Backdrop — layered, slowly animated ambient background.
+   Purely decorative: fixed, pointer-events:none, all motion on
+   `transform` so it stays on the compositor and never blocks input.
+   Colours come from the existing palette tokens (emerald + teal).
+   ============================================================ */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Faint engineering grid, faded out with a mask so it never competes
+   with foreground content. */
+.backdrop__grid {
+  position: absolute;
+  inset: -1px;
+  background-image:
+    linear-gradient(rgba(151, 182, 209, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(151, 182, 209, 0.05) 1px, transparent 1px);
+  background-size: 68px 66px;
+  -webkit-mask-image: radial-gradient(130% 95% at 50% -12%, #000 18%, transparent 74%);
+  mask-image: radial-gradient(130% 90% at 50% -10%, #000 18%, transparent 72%);
+}
+
+/* Three large, soft colour fields. radial-gradient (not blur) keeps them
+   cheap; they drift slowly and independently for organic movement. */
+.backdrop__orb {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+}
+.backdrop__orb--1 {
+  width: 62vw;
+  height: 62vw;
+  top: -24vw;
+  right: -14vw;
+  background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0) 62%);
+  animation: bd-drift-1 46s ease-in-out infinite;
+}
+.backdrop__orb--2 {
+  width: 56vw;
+  height: 56vw;
+  bottom: -22vw;
+  left: -16vw;
+  background: radial-gradient(circle at 50% 50%, rgba(45, 212, 191, 0.17), rgba(45, 212, 191, 0) 62%);
+  animation: bd-drift-2 58s ease-in-out infinite;
+}
+.backdrop__orb--3 {
+  width: 46vw;
+  height: 46vw;
+  top: 32%;
+  left: 40%;
+  background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.11), rgba(56, 189, 248, 0) 64%);
+  animation: bd-drift-3 66s ease-in-out infinite;
+}
+
+/* A single soft light beam for atmosphere. */
+.backdrop__beam {
+  position: absolute;
+  top: -35%;
+  left: 56%;
+  width: 40vw;
+  height: 165vh;
+  transform: rotate(18deg);
+  background: linear-gradient(
+    180deg,
+    rgba(16, 185, 129, 0) 0%,
+    rgba(16, 185, 129, 0.09) 38%,
+    rgba(45, 212, 191, 0.06) 62%,
+    rgba(16, 185, 129, 0) 100%
+  );
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 28%, #000 72%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 28%, #000 72%, transparent);
+  animation: bd-beam 80s ease-in-out infinite;
+  opacity: 0.85;
+}
+
+/* Film grain — a static layer, so it is rasterised once. */
+.backdrop__noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  opacity: 0.03;
+  mix-blend-mode: soft-light;
+}
+
+/* Gentle vignette to focus the eye toward the centre-top of each page. */
+.backdrop__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(135% 100% at 50% -5%, transparent 52%, rgba(3, 8, 16, 0.6) 100%);
+}
+
+@keyframes bd-drift-1 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-4%, 6%, 0) scale(1.08); }
+}
+@keyframes bd-drift-2 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(5%, -5%, 0) scale(1.12); }
+}
+@keyframes bd-drift-3 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-6%, -4%, 0) scale(1.1); }
+}
+@keyframes bd-beam {
+  0%, 100% { transform: rotate(18deg) translate3d(0, 0, 0); }
+  50% { transform: rotate(21deg) translate3d(-3vw, 2vh, 0); }
+}
+
+/* ---- Responsive: lighter, calmer on small screens ---- */
+@media (max-width: 900px) {
+  .backdrop__orb--3,
+  .backdrop__beam { display: none; }
+  .backdrop__orb {
+    filter: blur(10px);
+  }
+}
+@media (max-width: 640px) {
+  .backdrop__grid { background-size: 48px 48px; }
+  .backdrop__orb--1 { width: 90vw; height: 90vw; opacity: 0.8; }
+  .backdrop__orb--2 { width: 84vw; height: 84vw; opacity: 0.8; }
+}

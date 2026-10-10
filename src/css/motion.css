@@ -1,0 +1,135 @@
+/* ============================================================
+   Motion & depth — scroll reveals, pointer glare, float, and
+   reusable "band" section backgrounds.
+
+   Design notes:
+   - Reveals animate the INDEPENDENT `translate` property (not
+     `transform`), so a card can still own `transform` for hover /
+   tilt without the two fighting over the same property.
+   - Everything runs on opacity / translate / transform only, and
+     is fully disabled under `prefers-reduced-motion`.
+   ============================================================ */
+
+/* ---------------- Scroll reveal ---------------- */
+[data-reveal] {
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 0.7, 0.25, 1),
+    translate 0.7s cubic-bezier(0.22, 0.7, 0.25, 1),
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease;
+  transition-delay: var(--d, 0ms), var(--d, 0ms), 0ms, 0ms, 0ms, 0ms;
+}
+[data-reveal]:not(.is-visible) {
+  opacity: 0;
+  translate: 0 26px;
+}
+
+/* ---------------- Pointer glare ---------------- */
+/* The tilt runtime writes --mx/--my while the pointer moves over the card,
+   giving a soft light that tracks the cursor. Needs a positioned parent
+   (`.card` is `position: relative`). */
+[data-glare]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 3;
+  background: radial-gradient(
+    340px 340px at var(--mx, 50%) var(--my, 0%),
+    rgba(255, 255, 255, 0.14),
+    transparent 62%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+[data-glare]:hover::after { opacity: 1; }
+
+/* ---------------- Floating decorative objects ---------------- */
+@keyframes float-y {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -12px, 0); }
+}
+[data-float] { animation: float-y 6.5s ease-in-out infinite; }
+[data-float='fast'] { animation-duration: 5s; }
+[data-float='slow'] { animation-duration: 9s; }
+
+/* ---------------- Reusable band backgrounds ---------------- */
+/* Each major section gets its own composition (grid / glow / dots) so the
+   page never reads as one flat repeated block. All built from the existing
+   surface + emerald/teal tokens. */
+.band {
+  position: relative;
+  margin-top: clamp(40px, 6vw, 74px);
+  padding: clamp(26px, 4vw, 46px) clamp(18px, 3vw, 36px);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  overflow: hidden;
+  isolation: isolate;
+}
+.band > * { position: relative; z-index: 1; }
+.band .section-head { margin-top: 0; }
+
+/* Fine coordinate grid, fading in from the top-right. */
+.band--grid {
+  background: linear-gradient(180deg, rgba(20, 35, 57, 0.55) 0%, rgba(15, 28, 48, 0.22) 100%);
+}
+.band--grid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(151, 182, 209, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(151, 182, 209, 0.06) 1px, transparent 1px);
+  background-size: 42px 42px;
+  -webkit-mask-image: radial-gradient(90% 90% at 100% 0%, #000, transparent 72%);
+  mask-image: radial-gradient(90% 90% at 100% 0%, #000, transparent 72%);
+  z-index: 0;
+}
+
+/* Corner glow + a single diagonal light streak. */
+.band--glow {
+  background:
+    radial-gradient(90% 130% at 0% 0%, rgba(16, 185, 129, 0.12), transparent 58%),
+    linear-gradient(180deg, rgba(20, 35, 57, 0.5) 0%, rgba(15, 28, 48, 0.2) 100%);
+}
+.band--glow::before {
+  content: '';
+  position: absolute;
+  right: -12%;
+  top: -50%;
+  width: 56%;
+  height: 200%;
+  background: linear-gradient(120deg, transparent 0%, rgba(45, 212, 191, 0.1) 50%, transparent 100%);
+  transform: rotate(9deg);
+  z-index: 0;
+}
+
+/* Halftone dot field, fading in from the bottom-left. */
+.band--dots {
+  background: linear-gradient(180deg, rgba(20, 35, 57, 0.45) 0%, rgba(15, 28, 48, 0.18) 100%);
+}
+.band--dots::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(151, 182, 209, 0.09) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(95% 95% at 0% 100%, #000, transparent 70%);
+  mask-image: radial-gradient(95% 95% at 0% 100%, #000, transparent 70%);
+  z-index: 0;
+}
+
+/* ---------------- Reduced motion ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-reveal]:not(.is-visible) {
+    opacity: 1;
+    translate: none;
+    transition: none;
+  }
+  [data-float] { animation: none; }
+  [data-glare]::after { display: none; }
+}

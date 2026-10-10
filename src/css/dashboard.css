@@ -19,27 +19,34 @@
   text-align: center;
   padding: 26px 18px;
   background:
-    radial-gradient(120% 120% at 50% 0%, rgba(124, 108, 255, 0.16) 0%, transparent 60%),
+    radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.14) 0%, transparent 62%),
     var(--surface);
 }
 .stat-card b {
   display: block;
   font-family: 'Sora', sans-serif;
-  font-size: clamp(26px, 3vw, 34px);
-  color: #fff;
-  margin-bottom: 4px;
-  background: var(--primary-grad);
+  font-size: clamp(28px, 3vw, 38px);
+  font-weight: 700;
+  line-height: 1.05;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, #6ee7b7, #34d399);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.stat-card span { color: var(--muted); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; }
+.stat-card span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+}
 
 /* ---------------- Charts (custom SVG / CSS) ---------------- */
-.donut { display: grid; place-items: center; margin: 6px 0 10px; }
+.donut { display: grid; place-items: center; margin: 8px 0 12px; }
 .donut-value { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 700; fill: var(--text); }
 .donut-label { font-size: 11px; font-weight: 600; fill: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
-.bars { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+.bars { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
 .bar-row { display: grid; grid-template-columns: minmax(80px, 1.2fr) 3fr auto; align-items: center; gap: 12px; }
 .bar-label { font-size: 13px; color: var(--text-2); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .bar-track { height: 12px; border-radius: 999px; background: var(--surface-3); border: 1px solid var(--border); overflow: hidden; }
