@@ -50,16 +50,18 @@ const MapPicker = ({ value = {}, onChange, placeholder = 'Search a city, venue o
     if (!containerRef.current || mapRef.current) return
     const start = value.lat && value.lng ? [value.lat, value.lng] : DEFAULT_CENTER
     const map = L.map(containerRef.current, { scrollWheelZoom: false }).setView(start, value.lat ? 13 : DEFAULT_ZOOM)
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    // Esri World Street Map renders place labels in English/Latin (OSM's default
+    // tiles show local scripts such as Urdu in Pakistan).
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
       maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors'
+      attribution: 'Tiles &copy; Esri'
     }).addTo(map)
     map.on('click', async (e) => {
       const { lat, lng } = e.latlng
       placeMarker(lat, lng)
       setStatus('Looking up address…')
       try {
-        const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+        const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&accept-language=en&lat=${lat}&lon=${lng}`, { headers: { 'Accept-Language': 'en' } })
         const data = await r.json()
         emit(lat, lng, data?.display_name || `${lat.toFixed(5)}, ${lng.toFixed(5)}`)
       } catch {
@@ -88,7 +90,7 @@ const MapPicker = ({ value = {}, onChange, placeholder = 'Search a city, venue o
     setSearching(true)
     setStatus('Searching…')
     try {
-      const r = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=${encodeURIComponent(q)}`)
+      const r = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&accept-language=en&limit=1&q=${encodeURIComponent(q)}`, { headers: { 'Accept-Language': 'en' } })
       const data = await r.json()
       if (!data.length) {
         setStatus('No matching place found — try a more specific search.')

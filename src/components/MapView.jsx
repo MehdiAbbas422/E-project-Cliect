@@ -22,9 +22,11 @@ const MapView = ({ lat, lng, location }) => {
     if (!containerRef.current || mapRef.current || !lat || !lng) return
     const map = L.map(containerRef.current, { scrollWheelZoom: false, dragging: true })
       .setView([lat, lng], 14)
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    // Esri World Street Map renders place labels in English/Latin (OSM's default
+    // tiles show local scripts such as Urdu in Pakistan).
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
       maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors'
+      attribution: 'Tiles &copy; Esri'
     }).addTo(map)
     L.marker([lat, lng], { icon: pinIcon() }).addTo(map).bindPopup(location || 'Location').openPopup()
     mapRef.current = map
