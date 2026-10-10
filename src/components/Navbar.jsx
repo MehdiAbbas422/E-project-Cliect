@@ -51,7 +51,7 @@ const Navbar = () => {
     <nav>
       <Link to="/" className="brand" onClick={() => setMenu(false)}>
         <img className="brand-logo" src={logo} alt="" aria-hidden="true" />
-        EventSphere
+        <span className="brand-name">Event<b>Sphere</b></span>
       </Link>
 
       <button
