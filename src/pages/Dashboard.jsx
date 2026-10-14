@@ -77,6 +77,16 @@ const Dashboard = () => {
     api.get(`/announcements?expo=${expo._id}`).then(({ data }) => setAnnouncements(data)).catch(() => setAnnouncements([]))
   }, [])
 
+  const openExpoManager = (expo) => {
+    loadExpoData(expo)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const closeExpoManager = () => {
+    setSelected(null)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   // Live refresh when anything changes on the server.
   useRealtime(useCallback((detail) => {
     if (detail.scope === 'expos') loadExpos()
@@ -220,15 +230,19 @@ const Dashboard = () => {
 
   return (
     <div className="container">
-      <PageHero
-        eyebrow="Admin area"
-        title="Organizer Dashboard"
-        subtitle="Create and edit expos, manage the floor plan and agenda, post announcements and view analytics."
-        image={pageImages.dashboard}
-      />
-      <AdminTabs />
+      {!selected && (
+        <>
+          <PageHero
+            eyebrow="Admin area"
+            title="Organizer Dashboard"
+            subtitle="Create and edit expos, manage the floor plan and agenda, post announcements and view analytics."
+            image={pageImages.dashboard}
+          />
+          <AdminTabs />
+        </>
+      )}
 
-      <div className="dash-top">
+      {!selected && <div className="dash-top">
         <div className="card">
           <h2>{editingExpoId ? 'Edit Expo' : 'Create Expo'}</h2>
           <form onSubmit={saveExpo}>
@@ -282,14 +296,14 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="row">
-                <button type="button" className="soft" onClick={() => loadExpoData(expo)}>Manage</button>
+                <button type="button" className="soft" onClick={() => openExpoManager(expo)}>Manage</button>
                 <button type="button" className="ghost" onClick={() => startEditExpo(expo)}>Edit</button>
                 <button type="button" className="danger" onClick={() => deleteExpo(expo._id)}>Delete</button>
               </div>
             </div>
           ))}
         </div>
-      </div>
+      </div>}
 
       {selected && (
         <>
@@ -298,7 +312,7 @@ const Dashboard = () => {
             <div className="row">
               <button type="button" className="soft" onClick={exportBookingsCsv}>⬇️ Bookings CSV</button>
               <button type="button" className="ghost" onClick={() => window.print()}>🖨️ Print / PDF</button>
-              <button type="button" className="ghost" onClick={() => setSelected(null)}>Close</button>
+              <button type="button" className="ghost" onClick={closeExpoManager}>Close</button>
             </div>
           </div>
 
