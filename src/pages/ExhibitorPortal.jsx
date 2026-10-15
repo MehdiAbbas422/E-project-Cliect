@@ -2,6 +2,7 @@ import '../css/exhibitor-portal.css'
 import { useCallback, useEffect, useState } from 'react'
 import api from '../api'
 import ImageUpload from '../components/ImageUpload'
+import PaymentForm from '../components/PaymentForm'
 import { useRealtime } from '../hooks/useRealtime'
 import PageHero from '../components/PageHero'
 import { pageImages } from '../images'
@@ -18,6 +19,9 @@ const ExhibitorPortal = () => {
   const [enquiries, setEnquiries] = useState([])
   const [replies, setReplies] = useState({})
   const [message, setMessage] = useState('')
+  const [showPayment, setShowPayment] = useState(false)
+  const [pendingExpo, setPendingExpo] = useState(null)
+  const [pendingFormData, setPendingFormData] = useState(null)
 
   const profile = profiles.find((item) => (item.expo?._id || item.expo) === form.expo)
 
@@ -54,6 +58,15 @@ const ExhibitorPortal = () => {
 
   const save = async (e) => {
     e.preventDefault()
+    const selectedExpo = expos.find((ex) => ex._id === form.expo)
+
+    if (selectedExpo?.registrationFee > 0 && !profile) {
+      setPendingExpo(selectedExpo)
+      setPendingFormData(form)
+      setShowPayment(true)
+      return
+    }
+
     try {
       const { data } = profile
         ? await api.put(`/exhibitors/${profile._id}`, form)
@@ -65,6 +78,20 @@ const ExhibitorPortal = () => {
     } catch (err) {
       setMessage(err.response?.data?.message || 'Save failed')
     }
+  }
+
+  const handlePaymentSuccess = (exhibitor) => {
+    setProfiles((current) => [...current, exhibitor])
+    setShowPayment(false)
+    setPendingExpo(null)
+    setPendingFormData(null)
+    setMessage('Payment successful! Your application has been submitted and approved.')
+  }
+
+  const handlePaymentCancel = () => {
+    setShowPayment(false)
+    setPendingExpo(null)
+    setPendingFormData(null)
   }
 
   const cancelBooking = async (id) => {
@@ -93,6 +120,23 @@ const ExhibitorPortal = () => {
         image={pageImages.exhibitorPortal}
       />
       {message && <p className="success">{message}</p>}
+
+      {showPayment && pendingExpo && (
+        <div className="card">
+          <div className="row between">
+            <h2 style={{ margin: 0 }}>Payment</h2>
+            <span className="badge pending">{pendingExpo.title}</span>
+          </div>
+          <p className="muted">To complete your exhibitor registration, please pay the registration fee.</p>
+          <PaymentForm
+            amount={pendingExpo.registrationFee}
+            expoId={pendingExpo._id}
+            exhibitorData={pendingFormData}
+            onSuccess={handlePaymentSuccess}
+            onCancel={handlePaymentCancel}
+          />
+        </div>
+      )}
 
       <div className="card">
         <div className="row between">
