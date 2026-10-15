@@ -11,7 +11,7 @@ import PageHero from '../components/PageHero'
 import { pageImages } from '../images'
 
 const emptyExpo = { title: '', date: '', location: '', lat: null, lng: null, description: '', theme: '', image: '', registrationFee: '' }
-const emptyBooth = { number: '', size: 'Small', status: 'available' }
+const emptyBooth = { number: '', size: 'Small', status: 'available', price: '' }
 const emptySession = {
   title: '', speaker: '', topic: '', location: '', lat: null, lng: null, capacity: '',
   startHour: '', startMinute: '', startPeriod: 'AM',
@@ -356,6 +356,9 @@ const Dashboard = () => {
                 <label>Booth number</label>
                 <input required value={boothForm.number}
                   onChange={(e) => setBoothForm({ ...boothForm, number: e.target.value })} />
+                <label>Price (₹) <span className="hint">— 0 = free reservation</span></label>
+                <input type="number" min="0" placeholder="e.g. 500" value={boothForm.price}
+                  onChange={(e) => setBoothForm({ ...boothForm, price: e.target.value })} />
                 <label>Size</label>
                 <select value={boothForm.size}
                   onChange={(e) => setBoothForm({ ...boothForm, size: e.target.value })}>

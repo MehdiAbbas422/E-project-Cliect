@@ -1,11 +1,76 @@
 import '../css/expo-detail.css'
 import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { loadStripe } from '@stripe/stripe-js'
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import api from '../api'
 import { useAuth } from '../context/AuthContext'
 import { useRealtime } from '../hooks/useRealtime'
 import { getSocket } from '../socket'
 import MapView from '../components/MapView'
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
+
+const BoothPaymentForm = ({ booth, clientSecret, onSuccess, onClose }) => {
+  const stripe = useStripe()
+  const elements = useElements()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!stripe || !elements) return
+    setLoading(true)
+    setError('')
+
+    const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: { card: elements.getElement(CardElement) }
+    })
+
+    if (stripeError) {
+      setError(stripeError.message)
+      setLoading(false)
+      return
+    }
+
+    if (paymentIntent.status === 'succeeded') {
+      try {
+        await api.post(`/booths/${booth._id}/reserve`, { paymentId: paymentIntent.id })
+        onSuccess()
+      } catch (err) {
+        setError(err.response?.data?.message || 'Reservation failed after payment')
+        setLoading(false)
+      }
+    }
+  }
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+        <div className="row between">
+          <h3>Pay for Booth {booth.number}</h3>
+          <button className="ghost" onClick={onClose}>✕</button>
+        </div>
+        <p className="muted">Amount: <strong>₹{booth.price}</strong></p>
+        <form onSubmit={handleSubmit}>
+          <div className="card-element-wrapper">
+            <CardElement options={{ style: { base: { fontSize: '16px', color: '#fff', '::placeholder': { color: 'rgba(255,255,255,0.5)' } } } }} />
+          </div>
+          {error && <p className="error">{error}</p>}
+          <button type="submit" className="mt full" disabled={!stripe || loading}>
+            {loading ? 'Processing...' : `Pay ₹${booth.price}`}
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+const BoothPaymentModal = ({ booth, clientSecret, onSuccess, onClose }) => (
+  <Elements stripe={stripePromise}>
+    <BoothPaymentForm booth={booth} clientSecret={clientSecret} onSuccess={onSuccess} onClose={onClose} />
+  </Elements>
+)
 
 // Purpose: Public expo page — hero, venue map, live announcement board,
 // schedule (with booking) and the booth floor plan.
@@ -22,6 +87,8 @@ const ExpoDetail = () => {
   const [saved, setSaved] = useState(false)
   const [favBusy, setFavBusy] = useState(false)
   const [waitlisted, setWaitlisted] = useState([])
+  const [paymentBooth, setPaymentBooth] = useState(null)
+  const [clientSecret, setClientSecret] = useState('')
 
   const load = useCallback(() => {
     api.get(`/expos/${id}`).then(({ data }) => setExpo(data)).catch(() => setExpo(null))
@@ -66,7 +133,19 @@ const ExpoDetail = () => {
       showToast('success', 'Booth reserved successfully!')
       load()
     } catch (err) {
-      showToast('error', err.response?.data?.message || 'Reservation failed')
+      const data = err.response?.data
+      if (err.response?.status === 402 && data?.amount) {
+        setPaymentBooth({ _id: boothId, price: data.amount })
+        try {
+          const { data: pi } = await api.post(`/booths/${boothId}/payment-intent`)
+          setClientSecret(pi.clientSecret)
+        } catch {
+          showToast('error', 'Could not initialize payment')
+          setPaymentBooth(null)
+        }
+      } else {
+        showToast('error', data?.message || 'Reservation failed')
+      }
     }
   }
 
@@ -265,16 +344,37 @@ const ExpoDetail = () => {
               <span className={`badge ${b.status}`}>{b.status}</span>
             </div>
             <p className="muted">Size: {b.size}</p>
+            {b.price > 0 && <p className="muted">💰 ₹{b.price}</p>}
             {b.exhibitor?.name && <p className="muted">Held by: {b.exhibitor.name}</p>}
             {user?.role === 'exhibitor' && b.exhibitor?._id === user.id && b.status === 'reserved' && (
               <button className="mt full" onClick={() => removeReservation(b._id)}>Remove Reservation</button>
             )}
             {user?.role === 'exhibitor' && b.status === 'available' && (
-              <button className="mt full" onClick={() => reserve(b._id)}>Reserve this booth</button>
+              <button className="mt full" onClick={() => reserve(b._id)}>
+                {b.price > 0 ? `Reserve & Pay ₹${b.price}` : 'Reserve this booth'}
+              </button>
             )}
           </div>
         ))}
       </div>
+
+      {/* ---------- Payment Modal ---------- */}
+      {paymentBooth && clientSecret && (
+        <BoothPaymentModal
+          booth={paymentBooth}
+          clientSecret={clientSecret}
+          onSuccess={() => {
+            setPaymentBooth(null)
+            setClientSecret('')
+            showToast('success', 'Payment successful! Booth reserved.')
+            load()
+          }}
+          onClose={() => {
+            setPaymentBooth(null)
+            setClientSecret('')
+          }}
+        />
+      )}
 
       {/* ---------- Exhibitors ---------- */}
       <div className="section-head"><h2>Exhibitors at this expo</h2></div>
