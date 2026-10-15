@@ -134,7 +134,7 @@ const Dashboard = () => {
 
   const startEditBooth = (booth) => {
     setEditingBoothId(booth._id)
-    setBoothForm({ number: booth.number, size: booth.size, status: booth.status })
+    setBoothForm({ number: booth.number, size: booth.size, status: booth.status, price: booth.price ?? '' })
   }
 
   const deleteBooth = async (id) => {
