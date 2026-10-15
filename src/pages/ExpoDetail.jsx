@@ -149,6 +149,17 @@ const ExpoDetail = () => {
     }
   }
 
+  // Always show payment modal for booths with price > 0
+  const handleReserveClick = (boothId, price) => {
+    if (price > 0) {
+      // For paid booths, try reserve first - server will return 402 if payment needed
+      reserve(boothId)
+    } else {
+      // Free booths can be reserved directly
+      reserve(boothId)
+    }
+  }
+
   const book = async (sessionId) => {
     if (!user) {
       showToast('error', 'Please log in to book a session.')
@@ -337,7 +348,7 @@ const ExpoDetail = () => {
             {b.price > 0 && <p className="muted">💰 ₹{b.price}</p>}
             {b.exhibitor?.name && <p className="muted">Held by: {b.exhibitor.name}</p>}
             {user?.role === 'exhibitor' && b.status === 'available' && (
-              <button className="mt full" onClick={() => reserve(b._id)}>
+              <button className="mt full" onClick={() => handleReserveClick(b._id, b.price)}>
                 {b.price > 0 ? `Reserve & Pay ₹${b.price}` : 'Reserve this booth'}
               </button>
             )}
