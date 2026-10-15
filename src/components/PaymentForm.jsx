@@ -1,9 +1,7 @@
-import { useState } from 'react'
-import { loadStripe } from '@stripe/stripe-js'
+import { useEffect, useState } from 'react'
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import api from '../api'
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
+import { getStripePromise } from '../stripe'
 
 const CheckoutForm = ({ amount, expoId, exhibitorData, onSuccess, onCancel }) => {
   const stripe = useStripe()
@@ -79,16 +77,32 @@ const CheckoutForm = ({ amount, expoId, exhibitorData, onSuccess, onCancel }) =>
   )
 }
 
-const PaymentForm = ({ amount, expoId, exhibitorData, onSuccess, onCancel }) => (
-  <Elements stripe={stripePromise}>
-    <CheckoutForm
-      amount={amount}
-      expoId={expoId}
-      exhibitorData={exhibitorData}
-      onSuccess={onSuccess}
-      onCancel={onCancel}
-    />
-  </Elements>
-)
+const PaymentForm = ({ amount, expoId, exhibitorData, onSuccess, onCancel }) => {
+  const [stripePromise, setStripePromise] = useState(null)
+  const [stripeError, setStripeError] = useState('')
+
+  useEffect(() => {
+    let active = true
+    getStripePromise()
+      .then((promise) => { if (active) setStripePromise(promise) })
+      .catch((error) => { if (active) setStripeError(error.response?.data?.message || error.message) })
+    return () => { active = false }
+  }, [])
+
+  if (stripeError) return <p className="error">{stripeError}</p>
+  if (!stripePromise) return <p className="muted">Loading secure payment...</p>
+
+  return (
+    <Elements stripe={stripePromise}>
+      <CheckoutForm
+        amount={amount}
+        expoId={expoId}
+        exhibitorData={exhibitorData}
+        onSuccess={onSuccess}
+        onCancel={onCancel}
+      />
+    </Elements>
+  )
+}
 
 export default PaymentForm
