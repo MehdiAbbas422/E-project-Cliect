@@ -149,16 +149,6 @@ const ExpoDetail = () => {
     }
   }
 
-  const removeReservation = async (boothId) => {
-    try {
-      await api.delete(`/booths/${boothId}/reserve`)
-      showToast('success', 'Reservation removed successfully!')
-      load()
-    } catch (err) {
-      showToast('error', err.response?.data?.message || 'Reservation removal failed')
-    }
-  }
-
   const book = async (sessionId) => {
     if (!user) {
       showToast('error', 'Please log in to book a session.')
@@ -346,9 +336,6 @@ const ExpoDetail = () => {
             <p className="muted">Size: {b.size}</p>
             {b.price > 0 && <p className="muted">💰 ₹{b.price}</p>}
             {b.exhibitor?.name && <p className="muted">Held by: {b.exhibitor.name}</p>}
-            {user?.role === 'exhibitor' && b.exhibitor?._id === user.id && b.status === 'reserved' && (
-              <button className="mt full" onClick={() => removeReservation(b._id)}>Remove Reservation</button>
-            )}
             {user?.role === 'exhibitor' && b.status === 'available' && (
               <button className="mt full" onClick={() => reserve(b._id)}>
                 {b.price > 0 ? `Reserve & Pay ₹${b.price}` : 'Reserve this booth'}

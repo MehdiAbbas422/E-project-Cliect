@@ -49,3 +49,47 @@
   .detail-hero .fallback { height: 240px; }
   .detail-hero .overlay { padding: 22px 20px; }
 }
+
+/* ---------- Payment Modal ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-card {
+  background: var(--card, #1a1a2e);
+  border: 1px solid var(--border-strong, #333);
+  border-radius: 16px;
+  padding: 28px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-card h3 {
+  margin: 0 0 8px;
+  color: var(--text-1, #fff);
+}
+
+.modal-card form {
+  margin-top: 16px;
+}
+
+.modal-card form .error {
+  color: #f87171;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.card-element-wrapper {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-strong, #333);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 12px 0;
+}

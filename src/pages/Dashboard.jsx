@@ -10,7 +10,7 @@ import { useRealtime } from '../hooks/useRealtime'
 import PageHero from '../components/PageHero'
 import { pageImages } from '../images'
 
-const emptyExpo = { title: '', date: '', location: '', lat: null, lng: null, description: '', theme: '', image: '', registrationFee: '' }
+const emptyExpo = { title: '', date: '', location: '', lat: null, lng: null, description: '', theme: '', image: '' }
 const emptyBooth = { number: '', size: 'Small', status: 'available', price: '' }
 const emptySession = {
   title: '', speaker: '', topic: '', location: '', lat: null, lng: null, capacity: '',

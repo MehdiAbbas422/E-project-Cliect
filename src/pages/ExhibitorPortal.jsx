@@ -2,15 +2,12 @@ import '../css/exhibitor-portal.css'
 import { useCallback, useEffect, useState } from 'react'
 import api from '../api'
 import ImageUpload from '../components/ImageUpload'
-import PaymentForm from '../components/PaymentForm'
 import { useRealtime } from '../hooks/useRealtime'
 import PageHero from '../components/PageHero'
 import { pageImages } from '../images'
 
 const empty = { company: '', description: '', products: '', contact: '', logo: '', expo: '' }
 
-// Purpose: Exhibitor workspace — manage company profiles per expo, track
-// booked sessions and reply to attendee enquiries.
 const ExhibitorPortal = () => {
   const [expos, setExpos] = useState([])
   const [profiles, setProfiles] = useState([])
@@ -19,9 +16,7 @@ const ExhibitorPortal = () => {
   const [enquiries, setEnquiries] = useState([])
   const [replies, setReplies] = useState({})
   const [message, setMessage] = useState('')
-  const [showPayment, setShowPayment] = useState(false)
-  const [pendingExpo, setPendingExpo] = useState(null)
-  const [pendingFormData, setPendingFormData] = useState(null)
+  const [booths, setBooths] = useState([])
 
   const profile = profiles.find((item) => (item.expo?._id || item.expo) === form.expo)
 
@@ -33,6 +28,15 @@ const ExhibitorPortal = () => {
     api.get('/enquiries/received').then(({ data }) => setEnquiries(data))
   }, [])
 
+  const loadBooths = useCallback((expoId) => {
+    if (expoId) {
+      api.get(`/booths/expo/${expoId}`).then(({ data }) => setBooths(data))
+        .catch(() => setBooths([]))
+    } else {
+      setBooths([])
+    }
+  }, [])
+
   useEffect(() => {
     api.get('/expos').then(({ data }) => setExpos(data))
     api.get('/exhibitors/me').then(({ data }) => {
@@ -40,11 +44,16 @@ const ExhibitorPortal = () => {
       if (data.length) {
         const first = data[0]
         setForm({ ...empty, ...first, expo: first.expo?._id || first.expo })
+        loadBooths(first.expo?._id || first.expo)
       }
     })
     loadBookings()
     loadEnquiries()
-  }, [loadBookings, loadEnquiries])
+  }, [loadBookings, loadEnquiries, loadBooths])
+
+  useEffect(() => {
+    loadBooths(form.expo)
+  }, [form.expo, loadBooths])
 
   useRealtime(useCallback((detail) => {
     if (detail.scope === 'bookings') loadBookings()
@@ -54,19 +63,11 @@ const ExhibitorPortal = () => {
     const existing = profiles.find((item) => (item.expo?._id || item.expo) === expoId)
     setForm(existing ? { ...empty, ...existing, expo: expoId } : { ...empty, expo: expoId })
     setMessage('')
+    loadBooths(expoId)
   }
 
   const save = async (e) => {
     e.preventDefault()
-    const selectedExpo = expos.find((ex) => ex._id === form.expo)
-
-    if (selectedExpo?.registrationFee > 0 && !profile) {
-      setPendingExpo(selectedExpo)
-      setPendingFormData(form)
-      setShowPayment(true)
-      return
-    }
-
     try {
       const { data } = profile
         ? await api.put(`/exhibitors/${profile._id}`, form)
@@ -78,20 +79,6 @@ const ExhibitorPortal = () => {
     } catch (err) {
       setMessage(err.response?.data?.message || 'Save failed')
     }
-  }
-
-  const handlePaymentSuccess = (exhibitor) => {
-    setProfiles((current) => [...current, exhibitor])
-    setShowPayment(false)
-    setPendingExpo(null)
-    setPendingFormData(null)
-    setMessage('Payment successful! Your application has been submitted and approved.')
-  }
-
-  const handlePaymentCancel = () => {
-    setShowPayment(false)
-    setPendingExpo(null)
-    setPendingFormData(null)
   }
 
   const cancelBooking = async (id) => {
@@ -120,23 +107,6 @@ const ExhibitorPortal = () => {
         image={pageImages.exhibitorPortal}
       />
       {message && <p className="success">{message}</p>}
-
-      {showPayment && pendingExpo && (
-        <div className="card">
-          <div className="row between">
-            <h2 style={{ margin: 0 }}>Payment</h2>
-            <span className="badge pending">{pendingExpo.title}</span>
-          </div>
-          <p className="muted">To complete your exhibitor registration, please pay the registration fee.</p>
-          <PaymentForm
-            amount={pendingExpo.registrationFee}
-            expoId={pendingExpo._id}
-            exhibitorData={pendingFormData}
-            onSuccess={handlePaymentSuccess}
-            onCancel={handlePaymentCancel}
-          />
-        </div>
-      )}
 
       <div className="card">
         <div className="row between">
@@ -175,6 +145,27 @@ const ExhibitorPortal = () => {
 
           <button className="mt full">Save profile</button>
         </form>
+      </div>
+
+      <div className="section-head"><h2>Available Booths</h2></div>
+      <div className="card flat">
+        {booths.length === 0 && <div className="empty"><span className="em">🧱</span>No booths available for this expo.</div>}
+        {booths.map((b) => (
+          <div key={b._id} className="list-item">
+            <div>
+              <div className="who">Booth {b.number}</div>
+              <div className="sub">Size: {b.size} · ₹{b.price}</div>
+            </div>
+            <div className="row">
+              <span className={`badge ${b.status}`}>{b.status}</span>
+              {b.status === 'available' && (
+                <button type="button" onClick={() => window.location.href = `/expos/${b.expo}`}>
+                  Reserve & Pay
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="section-head"><h2>Attendee enquiries</h2></div>
