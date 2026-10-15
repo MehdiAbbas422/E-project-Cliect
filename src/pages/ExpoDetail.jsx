@@ -9,7 +9,9 @@ import { useRealtime } from '../hooks/useRealtime'
 import { getSocket } from '../socket'
 import MapView from '../components/MapView'
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
+const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
+const hasStripePublishableKey = Boolean(stripePublishableKey && !stripePublishableKey.includes('your_key_here'))
+const stripePromise = hasStripePublishableKey ? loadStripe(stripePublishableKey) : Promise.resolve(null)
 
 const BoothPaymentForm = ({ booth, clientSecret, onSuccess, onClose }) => {
   const stripe = useStripe()
@@ -139,8 +141,8 @@ const ExpoDetail = () => {
         try {
           const { data: pi } = await api.post(`/booths/${boothId}/payment-intent`)
           setClientSecret(pi.clientSecret)
-        } catch {
-          showToast('error', 'Could not initialize payment')
+        } catch (err) {
+          showToast('error', err.response?.data?.message || 'Could not initialize payment')
           setPaymentBooth(null)
         }
       } else {
@@ -151,6 +153,10 @@ const ExpoDetail = () => {
 
   // Always show payment modal for booths with price > 0
   const handleReserveClick = (boothId, price) => {
+    if (price > 0 && !hasStripePublishableKey) {
+      showToast('error', 'Card payments are not configured. Add VITE_STRIPE_PUBLISHABLE_KEY to the frontend environment.')
+      return
+    }
     if (price > 0) {
       // For paid booths, try reserve first - server will return 402 if payment needed
       reserve(boothId)
