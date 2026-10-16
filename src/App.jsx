@@ -16,6 +16,7 @@ import Dashboard from './pages/Dashboard'
 import AdminExhibitors from './pages/admin/AdminExhibitors'
 import AdminFeedback from './pages/admin/AdminFeedback'
 import AdminUsers from './pages/admin/AdminUsers'
+import AdminAnalytics from './pages/admin/AdminAnalytics'
 import ExhibitorPortal from './pages/ExhibitorPortal'
 import Feedback from './pages/Feedback'
 import MyBookings from './pages/MyBookings'
@@ -61,6 +62,7 @@ const App = () => {
         <Route path="/admin/exhibitors" element={<Protected roles={['admin']}><AdminExhibitors /></Protected>} />
         <Route path="/admin/feedback" element={<Protected roles={['admin']}><AdminFeedback /></Protected>} />
         <Route path="/admin/users" element={<Protected roles={['admin']}><AdminUsers /></Protected>} />
+        <Route path="/admin/analytics" element={<Protected roles={['admin']}><AdminAnalytics /></Protected>} />
         <Route path="/exhibitor" element={<Protected roles={['exhibitor']}><ExhibitorPortal /></Protected>} />
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -6,7 +6,8 @@ const tabs = [
   { to: '/dashboard', label: '🎪 Expos & agenda' },
   { to: '/admin/exhibitors', label: '📄 Applications' },
   { to: '/admin/feedback', label: '💬 Feedback' },
-  { to: '/admin/users', label: '👥 Users' }
+  { to: '/admin/users', label: '👥 Users' },
+  { to: '/admin/analytics', label: '📊 Analytics' }
 ]
 
 const AdminTabs = () => {
