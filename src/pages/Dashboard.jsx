@@ -50,6 +50,7 @@ const to12Hour = (value) => {
 const Dashboard = () => {
   const [expos, setExpos] = useState([])
   const [selected, setSelected] = useState(null)
+  const [dashboardView, setDashboardView] = useState('create')
   const [booths, setBooths] = useState([])
   const [sessions, setSessions] = useState([])
   const [analytics, setAnalytics] = useState(null)
@@ -102,9 +103,11 @@ const Dashboard = () => {
     setExpoForm(emptyExpo)
     setEditingExpoId(null)
     loadExpos()
+    setDashboardView('expos')
   }
 
   const startEditExpo = (expo) => {
+    setDashboardView('create')
     setEditingExpoId(expo._id)
     setExpoForm({
       title: expo.title || '', date: expo.date ? expo.date.slice(0, 10) : '',
@@ -231,6 +234,8 @@ const Dashboard = () => {
 
   return (
     <div className="container">
+      {!selected && (
+        <>
       <PageHero
         eyebrow="Admin area"
         title="Organizer Dashboard"
@@ -239,7 +244,19 @@ const Dashboard = () => {
       />
       <AdminTabs />
 
-      <div className="dash-top">
+      <div className="row mt" role="group" aria-label="Expo dashboard views">
+        <button type="button" className={dashboardView === 'create' ? 'soft' : 'ghost'}
+          onClick={() => { setDashboardView('create'); setEditingExpoId(null); setExpoForm(emptyExpo) }}>
+          Create Expo
+        </button>
+        <button type="button" className={dashboardView === 'expos' ? 'soft' : 'ghost'}
+          onClick={() => setDashboardView('expos')}>
+          Manage Expos
+        </button>
+      </div>
+
+      <div className="dash-top single">
+        {dashboardView === 'create' && (
         <div className="card">
           <h2>{editingExpoId ? 'Edit Expo' : 'Create Expo'}</h2>
           <form onSubmit={saveExpo}>
@@ -280,7 +297,9 @@ const Dashboard = () => {
             </div>
           </form>
         </div>
+        )}
 
+        {dashboardView === 'expos' && (
         <div className="card">
           <h2>Expos</h2>
           {expos.length === 0 && <div className="empty"><span className="em">🎪</span>No expos yet — create your first one.</div>}
@@ -304,7 +323,10 @@ const Dashboard = () => {
             </div>
           ))}
         </div>
+        )}
       </div>
+        </>
+      )}
 
       {selected && (
         <>
