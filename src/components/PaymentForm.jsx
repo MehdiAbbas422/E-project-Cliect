@@ -51,7 +51,7 @@ const CheckoutForm = ({ amount, expoId, exhibitorData, onSuccess, onCancel }) =>
     <form onSubmit={handleSubmit} className="payment-form">
       <div className="payment-amount">
         <span>Registration Fee:</span>
-        <strong>₹{Number(amount).toFixed(2)}</strong>
+        <strong>PKR {Number(amount).toFixed(2)}</strong>
       </div>
       <div className="card-element-wrapper">
         <CardElement options={{
@@ -67,7 +67,7 @@ const CheckoutForm = ({ amount, expoId, exhibitorData, onSuccess, onCancel }) =>
       {error && <p className="error">{error}</p>}
       <div className="row mt">
         <button type="submit" disabled={!stripe || loading} className="full">
-          {loading ? 'Processing...' : `Pay ₹${Number(amount).toFixed(2)}`}
+          {loading ? 'Processing...' : `Pay PKR ${Number(amount).toFixed(2)}`}
         </button>
         {onCancel && (
           <button type="button" className="ghost" onClick={onCancel}>Cancel</button>

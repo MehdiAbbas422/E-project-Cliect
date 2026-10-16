@@ -40,7 +40,7 @@ const AdminAnalytics = () => {
       />
 
       <div className="grid">
-        <div className="card stat-card"><b>₹{totalEarnings.toLocaleString()}</b><span>Total Earnings</span></div>
+        <div className="card stat-card"><b>PKR {totalEarnings.toLocaleString()}</b><span>Total Earnings</span></div>
         <div className="card stat-card"><b>{totalExpos}</b><span>Total Expos</span></div>
         <div className="card stat-card"><b>{totalBooths}</b><span>Total Booths</span></div>
         <div className="card stat-card"><b>{totalSold}</b><span>Booths Sold</span></div>
@@ -80,7 +80,7 @@ const AdminAnalytics = () => {
                 <td>{m.exhibitors}</td>
                 <td>{m.boothsSold}</td>
                 <td>{m.boothsUnsold}</td>
-                <td>₹{m.earnings.toLocaleString()}</td>
+                <td>PKR {m.earnings.toLocaleString()}</td>
               </tr>
             ))}
           </tbody>

@@ -371,7 +371,7 @@ const Dashboard = () => {
                 <label>Booth number</label>
                 <input required value={boothForm.number}
                   onChange={(e) => setBoothForm({ ...boothForm, number: e.target.value })} />
-                <label>Price (₹) <span className="hint">— 0 = free reservation</span></label>
+                <label>Price (PKR) <span className="hint">— 0 = free reservation</span></label>
                 <input type="number" min="0" placeholder="e.g. 500" value={boothForm.price}
                   onChange={(e) => setBoothForm({ ...boothForm, price: e.target.value })} />
                 <label>Size</label>

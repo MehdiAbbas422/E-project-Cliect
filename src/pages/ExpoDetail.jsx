@@ -49,14 +49,14 @@ const BoothPaymentForm = ({ booth, clientSecret, onSuccess, onClose }) => {
           <h3>Pay for Booth {booth.number}</h3>
           <button className="ghost" onClick={onClose}>✕</button>
         </div>
-        <p className="muted">Amount: <strong>₹{booth.price}</strong></p>
+        <p className="muted">Amount: <strong>PKR {booth.price}</strong></p>
         <form onSubmit={handleSubmit}>
           <div className="card-element-wrapper">
             <CardElement options={{ style: { base: { fontSize: '16px', color: '#fff', '::placeholder': { color: 'rgba(255,255,255,0.5)' } } } }} />
           </div>
           {error && <p className="error">{error}</p>}
           <button type="submit" className="mt full" disabled={!stripe || loading}>
-            {loading ? 'Processing...' : `Pay ₹${booth.price}`}
+            {loading ? 'Processing...' : `Pay PKR ${booth.price}`}
           </button>
         </form>
       </div>
@@ -345,11 +345,11 @@ const ExpoDetail = () => {
               <span className={`badge ${b.status}`}>{b.status}</span>
             </div>
             <p className="muted">Size: {b.size}</p>
-            {b.price > 0 && <p className="muted">💰 ₹{b.price}</p>}
+            {b.price > 0 && <p className="muted">💰 PKR {b.price}</p>}
             {b.exhibitor?.name && <p className="muted">Held by: {b.exhibitor.name}</p>}
             {user?.role === 'exhibitor' && b.status === 'available' && (
               <button className="mt full" onClick={() => handleReserveClick(b._id, b.price)}>
-                {b.price > 0 ? `Reserve & Pay ₹${b.price}` : 'Reserve this booth'}
+                {b.price > 0 ? `Reserve & Pay PKR ${b.price}` : 'Reserve this booth'}
               </button>
             )}
           </div>

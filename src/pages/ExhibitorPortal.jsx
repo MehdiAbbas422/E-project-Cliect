@@ -154,7 +154,7 @@ const ExhibitorPortal = () => {
           <div key={b._id} className="list-item">
             <div>
               <div className="who">Booth {b.number}</div>
-              <div className="sub">Size: {b.size} · ₹{b.price}</div>
+              <div className="sub">Size: {b.size} · PKR {b.price}</div>
             </div>
             <div className="row">
               <span className={`badge ${b.status}`}>{b.status}</span>
