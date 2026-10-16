@@ -50,12 +50,12 @@ const AdminAnalytics = () => {
 
       <div className="section-head"><h2>Earnings by Month</h2></div>
       <div className="card">
-        <BarChart items={data.map((m) => ({ title: m.month, count: m.earnings }))} />
+        <BarChart items={descendingMonths.map((m) => ({ title: m.month, count: m.earnings }))} />
       </div>
 
       <div className="section-head"><h2>Booths Sold vs Unsold</h2></div>
       <div className="card">
-        <BarChart items={data.map((m) => ({ title: m.month, count: m.boothsSold }))} />
+        <BarChart items={descendingMonths.map((m) => ({ title: m.month, count: m.boothsSold }))} />
       </div>
 
       <div className="section-head"><h2>Monthly Breakdown</h2></div>
