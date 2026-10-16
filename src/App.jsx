@@ -45,8 +45,10 @@ const App = () => {
   return (
     <>
       <Backdrop />
-      <Navbar />
-      <Routes>
+      <div className="app-shell">
+        <Navbar />
+        <main className="app-content">
+        <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -65,10 +67,12 @@ const App = () => {
         <Route path="/admin/analytics" element={<Protected roles={['admin']}><AdminAnalytics /></Protected>} />
         <Route path="/exhibitor" element={<Protected roles={['exhibitor']}><ExhibitorPortal /></Protected>} />
         <Route path="*" element={<NotFound />} />
-      </Routes>
-      <footer>
-        <b>EventSphere</b> — premium expo &amp; trade-show management · Built with React, Node.js, MongoDB &amp; Leaflet maps
-      </footer>
+        </Routes>
+        <footer>
+          <b>EventSphere</b> — premium expo &amp; trade-show management · Built with React, Node.js, MongoDB &amp; Leaflet maps
+        </footer>
+        </main>
+      </div>
     </>
   )
 }

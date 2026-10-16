@@ -112,8 +112,7 @@ const Dashboard = () => {
     setExpoForm({
       title: expo.title || '', date: expo.date ? expo.date.slice(0, 10) : '',
       location: expo.location || '', lat: expo.lat ?? null, lng: expo.lng ?? null,
-      description: expo.description || '', theme: expo.theme || '', image: expo.image || '',
-      registrationFee: expo.registrationFee ?? ''
+      description: expo.description || '', theme: expo.theme || '', image: expo.image || ''
     })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -282,9 +281,6 @@ const Dashboard = () => {
             <label>Description</label>
             <textarea rows="3" value={expoForm.description}
               onChange={(e) => setExpoForm({ ...expoForm, description: e.target.value })} />
-            <label>Registration fee (₹) <span className="hint">— 0 = free registration</span></label>
-            <input type="number" min="0" placeholder="e.g. 500" value={expoForm.registrationFee}
-              onChange={(e) => setExpoForm({ ...expoForm, registrationFee: e.target.value })} />
             <div className="row mt">
               <button type="submit" id="expo-submit-btn" className="full">
                 {editingExpoId ? 'Update Expo' : 'Add Expo'}
