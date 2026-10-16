@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useNotifications } from '../context/NotificationContext'
 import logo from '../assets/logo.png'
@@ -11,7 +11,6 @@ const Navbar = () => {
   const [menu, setMenu] = useState(false)
   const panelRef = useRef(null)
   const navigate = useNavigate()
-  const { pathname } = useLocation()
 
   useEffect(() => {
     const onClick = (e) => {
@@ -44,11 +43,8 @@ const Navbar = () => {
     navigate('/')
   }
 
-  const isActive = (path) => pathname === path
-
   return (
     <>
-      {/* Mobile top bar */}
       <div className="mobile-topbar">
         <button
           type="button"
@@ -66,126 +62,44 @@ const Navbar = () => {
       </div>
       {menu && <button type="button" className="sidebar-backdrop" aria-label="Close navigation" onClick={() => setMenu(false)} />}
 
-      {/* Icon Rail (far left floating pill) */}
-      <div className="sidebar-rail">
-        <div className="rail-brand">🎪</div>
-        <div className="rail-links">
-          <button className={`rail-btn ${isActive('/expos') ? 'active' : ''}`} title="Expos" onClick={() => navigate('/expos')}>🌐</button>
-          <button className={`rail-btn ${isActive('/exhibitors') ? 'active' : ''}`} title="Exhibitors" onClick={() => navigate('/exhibitors')}>🏢</button>
-          {user?.role === 'admin' && (
-            <>
-              <button className={`rail-btn ${isActive('/dashboard') ? 'active' : ''}`} title="Dashboard" onClick={() => navigate('/dashboard')}>📊</button>
-              <button className={`rail-btn ${isActive('/admin/analytics') ? 'active' : ''}`} title="Analytics" onClick={() => navigate('/admin/analytics')}>📈</button>
-            </>
-          )}
-          {user?.role === 'exhibitor' && (
-            <button className={`rail-btn ${isActive('/exhibitor') ? 'active' : ''}`} title="My Portal" onClick={() => navigate('/exhibitor')}>🏪</button>
-          )}
-          {user && (
-            <button className={`rail-btn ${isActive('/profile') ? 'active' : ''}`} title="Profile" onClick={() => navigate('/profile')}>👤</button>
-          )}
-        </div>
-        <div className="rail-divider" />
-        <div className="rail-links">
-          {user ? (
-            <button className="rail-btn" title="Logout" onClick={handleLogout}>🚪</button>
-          ) : (
-            <button className={`rail-btn ${isActive('/login') ? 'active' : ''}`} title="Login" onClick={() => navigate('/login')}>🔑</button>
-          )}
-        </div>
-      </div>
-
-      {/* Main Sidebar Panel */}
       <nav className={`sidebar ${menu ? 'open' : ''}`}>
-        {/* User Profile Header */}
-        {user && (
-          <div className="sidebar-profile">
-            <div className="profile-avatar">{user.name?.[0]?.toUpperCase()}</div>
-            <div className="profile-info">
-              <div className="profile-name">{user.name}</div>
-              <div className="profile-email">{user.email}</div>
-            </div>
-            <span className="profile-chevron">▾</span>
-          </div>
-        )}
+        <Link to="/" className="brand sidebar-brand" onClick={() => setMenu(false)}>
+          <img className="brand-logo" src={logo} alt="" aria-hidden="true" />
+          <span className="brand-name">Event<b>Sphere</b></span>
+        </Link>
 
         <div className={`links ${menu ? 'open' : ''}`} onClick={onLinksClick}>
-          {/* Explore Section */}
           <span className="sidebar-section">Explore</span>
-          <NavLink to="/expos" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
-            <span className="link-icon">🌐</span> Expos
-          </NavLink>
-          <NavLink to="/exhibitors" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
-            <span className="link-icon">🏢</span> Exhibitors
-          </NavLink>
-
-          {/* Administration Section */}
+          <NavLink to="/expos" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>Expos</NavLink>
+          <NavLink to="/exhibitors" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>Exhibitors</NavLink>
           {user?.role === 'admin' && (
             <>
               <span className="sidebar-section">Administration</span>
-              <NavLink to="/dashboard" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
-                <span className="link-icon">📊</span> Dashboard
-                <span className="badge-count">{/* expo count badge */}</span>
-              </NavLink>
-              <NavLink to="/admin/exhibitors" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
-                <span className="link-icon">📄</span> Applications
-                <span className="badge-count">{/* pending count badge */}</span>
-              </NavLink>
-              <NavLink to="/admin/analytics" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
-                <span className="link-icon">📈</span> Analytics
-              </NavLink>
-              <NavLink to="/admin/users" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
-                <span className="link-icon">👥</span> Users
-              </NavLink>
-              <NavLink to="/admin/feedback" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
-                <span className="link-icon">💬</span> Feedback
-              </NavLink>
+              <NavLink to="/dashboard" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>Dashboard</NavLink>
+              <NavLink to="/admin/exhibitors" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>Applications</NavLink>
+              <NavLink to="/admin/analytics" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>Analytics</NavLink>
+              <NavLink to="/admin/users" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>Users</NavLink>
+              <NavLink to="/admin/feedback" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>Feedback</NavLink>
             </>
           )}
-
-          {/* Exhibitor Section */}
-          {user?.role === 'exhibitor' && (
-            <>
-              <span className="sidebar-section">My Workspace</span>
-              <NavLink to="/exhibitor" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
-                <span className="link-icon">🏪</span> My Portal
-              </NavLink>
-            </>
-          )}
-
-          {/* Account Section */}
+          {user?.role === 'exhibitor' && <NavLink to="/exhibitor" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>My Portal</NavLink>}
           {user && (
             <>
-              <span className="sidebar-section">Your Account</span>
-              <NavLink to="/my-bookings" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
-                <span className="link-icon">🎟️</span> My Bookings
-              </NavLink>
-              <NavLink to="/my-messages" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
-                <span className="link-icon">✉️</span> Messages
-              </NavLink>
-              {user.role !== 'admin' && (
-                <NavLink to="/feedback" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
-                  <span className="link-icon">💬</span> Feedback
-                </NavLink>
-              )}
+              <span className="sidebar-section">Your account</span>
+              <NavLink to="/my-bookings" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>My Bookings</NavLink>
+              <NavLink to="/my-messages" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>Messages</NavLink>
+              {user.role !== 'admin' && <NavLink to="/feedback" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>Feedback</NavLink>}
             </>
           )}
-
-          {/* Guest Section */}
           {!user && (
             <>
-              <span className="sidebar-section">Get Started</span>
-              <NavLink to="/login" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
-                <span className="link-icon">🔑</span> Login
-              </NavLink>
-              <NavLink to="/register" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
-                <span className="link-icon">✨</span> Get Started
-              </NavLink>
+              <span className="sidebar-section">Your account</span>
+              <NavLink to="/login" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>Login</NavLink>
+              <NavLink to="/register" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>Get Started</NavLink>
             </>
           )}
         </div>
 
-        {/* Bottom Section */}
         {user && (
           <div className="sidebar-bottom">
             <div className="bell-wrap" ref={panelRef}>
@@ -196,7 +110,7 @@ const Navbar = () => {
                 aria-expanded={open}
                 onClick={() => setOpen((v) => !v)}
               >
-                <span>🔔</span> Notifications
+                <span>🔔 Notifications</span>
                 {unread > 0 && <span className="bell-count">{unread > 9 ? '9+' : unread}</span>}
               </button>
               {open && (
