@@ -21,6 +21,7 @@ const AdminAnalytics = () => {
   const totalBooths = data.reduce((sum, m) => sum + m.booths, 0)
   const totalSold = data.reduce((sum, m) => sum + m.boothsSold, 0)
   const totalUnsold = data.reduce((sum, m) => sum + m.boothsUnsold, 0)
+  const descendingMonths = [...data].sort((a, b) => b.monthKey.localeCompare(a.monthKey))
 
   if (loading) {
     return (
@@ -72,7 +73,7 @@ const AdminAnalytics = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((m) => (
+            {descendingMonths.map((m) => (
               <tr key={m.monthKey}>
                 <td>{m.month}</td>
                 <td>{m.expos}</td>
