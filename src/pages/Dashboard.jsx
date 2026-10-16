@@ -231,19 +231,15 @@ const Dashboard = () => {
 
   return (
     <div className="container">
-      {!selected && (
-        <>
-          <PageHero
-            eyebrow="Admin area"
-            title="Organizer Dashboard"
-            subtitle="Create and edit expos, manage the floor plan and agenda, post announcements and view analytics."
-            image={pageImages.dashboard}
-          />
-          <AdminTabs />
-        </>
-      )}
+      <PageHero
+        eyebrow="Admin area"
+        title="Organizer Dashboard"
+        subtitle="Create and edit expos, manage the floor plan and agenda, post announcements and view analytics."
+        image={pageImages.dashboard}
+      />
+      <AdminTabs />
 
-      {!selected && <div className="dash-top">
+      <div className="dash-top">
         <div className="card">
           <h2>{editingExpoId ? 'Edit Expo' : 'Create Expo'}</h2>
           <form onSubmit={saveExpo}>
@@ -289,7 +285,7 @@ const Dashboard = () => {
           <h2>Expos</h2>
           {expos.length === 0 && <div className="empty"><span className="em">🎪</span>No expos yet — create your first one.</div>}
           {expos.map((expo) => (
-            <div key={expo._id} className="list-item">
+            <div key={expo._id} className="expo-card">
               <div className="thumb-row">
                 {expo.image
                   ? <img src={expo.image} alt="" style={{ width: 46, height: 46, borderRadius: 10, objectFit: 'cover' }} />
@@ -297,9 +293,10 @@ const Dashboard = () => {
                 <div>
                   <div className="who">{expo.title}</div>
                   <div className="sub">📍 {expo.location || 'No location set'}</div>
+                  <div className="sub">📅 {expo.date ? new Date(expo.date).toLocaleDateString() : ''}</div>
                 </div>
               </div>
-              <div className="row">
+              <div className="expo-card-actions">
                 <button type="button" className="soft" onClick={() => openExpoManager(expo)}>Manage</button>
                 <button type="button" className="ghost" onClick={() => startEditExpo(expo)}>Edit</button>
                 <button type="button" className="danger" onClick={() => deleteExpo(expo._id)}>Delete</button>
@@ -307,7 +304,7 @@ const Dashboard = () => {
             </div>
           ))}
         </div>
-      </div>}
+      </div>
 
       {selected && (
         <>

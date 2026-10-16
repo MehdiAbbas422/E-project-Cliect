@@ -3,6 +3,7 @@ import api from '../../api'
 import { BarChart } from '../../components/Charts'
 import PageHero from '../../components/PageHero'
 import { pageImages } from '../../images'
+import '../../css/admin-analytics.css'
 
 const AdminAnalytics = () => {
   const [data, setData] = useState([])
